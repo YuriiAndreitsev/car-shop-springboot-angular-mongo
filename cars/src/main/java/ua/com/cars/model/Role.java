@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+
+//No need for this testing example
 @Data
 @Document(collection = "user_roles")
 @NoArgsConstructor

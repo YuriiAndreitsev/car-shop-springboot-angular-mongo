@@ -1,0 +1,13 @@
+<p>cars works!</p>
+<ul class="cars">
+    <li *ngFor="let car of cars">
+        <div>
+            <div><label for="brand">Brand: </label>
+                <span class="badge"  id="brand">{{car.brand.brandName}}</span></div>
+            <div><label for="model">Model: </label>
+                <span class="badge"  id="model">{{car.model}}</span></div>
+            <div><label for="price">Price: </label>
+                <span class="badge"  id="price">{{car.price}}</span></div>
+        </div>
+    </li>
+</ul>
