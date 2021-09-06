@@ -19,5 +19,4 @@ public class Car {
     private LocalDateTime created;
     private int price;
     private Set<String> urlImageList;
-
 }
