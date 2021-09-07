@@ -14,13 +14,19 @@ import java.util.List;
 public class CarController {
     @Autowired
     CarService carService;
+
     @GetMapping("/all")
-    public ResponseEntity<List<Car>> getAllCars(){
+    public ResponseEntity<List<Car>> getAllCars() {
         return ResponseEntity.ok(carService.getAllCars());
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Car> getCarById(@PathVariable(name = "id") String id) {
+        return ResponseEntity.ok(carService.getCarById(id));
+    }
+
     @PostMapping("/add")
-    public ResponseEntity<Car> addCar(@RequestBody Car car){
+    public ResponseEntity<Car> addCar(@RequestBody Car car) {
         return ResponseEntity.ok(carService.addCar(car));
     }
 }

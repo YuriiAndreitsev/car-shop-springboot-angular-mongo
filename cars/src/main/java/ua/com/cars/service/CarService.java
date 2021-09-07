@@ -16,6 +16,9 @@ public class CarService {
         return carRepository.findAll();
     }
 
+    public Car getCarById(String id){
+        return carRepository.findById(id).orElseThrow(()->new IllegalArgumentException("Unable to find car by id. Your id to search : "+id));
+    }
     public Car addCar(Car car){
         return carRepository.insert(car);
     }

@@ -1,13 +1,16 @@
-<p>cars works!</p>
+<h2>My Cars:</h2>
 <ul class="cars">
-    <li *ngFor="let car of cars">
+    <li *ngFor="let car of cars" [class.selected]="car === selectedCar"   (click)="onSelect(car)">
         <div>
+            
             <div><label for="brand">Brand: </label>
                 <span class="badge"  id="brand">{{car.brand.brandName}}</span></div>
             <div><label for="model">Model: </label>
                 <span class="badge"  id="model">{{car.model}}</span></div>
             <div><label for="price">Price: </label>
                 <span class="badge"  id="price">{{car.price}}</span></div>
+                <hr>
         </div>
     </li>
 </ul>
+<app-car-detail [car]="selectedCar"></app-car-detail>
