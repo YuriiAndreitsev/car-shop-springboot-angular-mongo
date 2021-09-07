@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ua.com.cars.model.Car;
 import ua.com.cars.service.CarService;
 
+import javax.websocket.server.PathParam;
 import java.util.List;
 
 @RestController
@@ -28,5 +29,10 @@ public class CarController {
     @PostMapping("/add")
     public ResponseEntity<Car> addCar(@RequestBody Car car) {
         return ResponseEntity.ok(carService.addCar(car));
+    }
+
+    @GetMapping("search/{term}")
+    public ResponseEntity<List<Car>> searchCarsByTerm (@PathVariable(name = "term") String term){
+        return ResponseEntity.ok(carService.searchCarsContainingBrandOrModel(term));
     }
 }

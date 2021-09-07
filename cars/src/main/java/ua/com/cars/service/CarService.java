@@ -2,6 +2,7 @@ package ua.com.cars.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ua.com.cars.model.Brand;
 import ua.com.cars.model.Car;
 import ua.com.cars.repository.CarRepository;
 
@@ -12,14 +13,19 @@ public class CarService {
     @Autowired
     CarRepository carRepository;
 
-    public List<Car> getAllCars(){
+    public List<Car> getAllCars() {
         return carRepository.findAll();
     }
 
-    public Car getCarById(String id){
-        return carRepository.findById(id).orElseThrow(()->new IllegalArgumentException("Unable to find car by id. Your id to search : "+id));
+    public Car getCarById(String id) {
+        return carRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Unable to find car by id. Your id to search : " + id));
     }
-    public Car addCar(Car car){
+
+    public Car addCar(Car car) {
         return carRepository.insert(car);
+    }
+
+    public List<Car> searchCarsContainingBrandOrModel(String term) {
+        return carRepository.findCarsByBrandContainingOrModelContaining(new Brand(term, null,null),term);
     }
 }
