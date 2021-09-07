@@ -27,4 +27,17 @@ export class CarsComponent implements OnInit {
     this.getCars();
   }
 
+  add(model: string): void {
+    model = model.trim();
+    if (!model) { return; }
+    this.carService.addCar({ model } as Car)
+      .subscribe(car => {
+        this.cars.push(car);
+      });
+  }
+
+  delete(car: Car): void {
+    this.cars = this.cars.filter(c => c !== car);
+    this.carService.deleteCar(car.id).subscribe();
+  }
 }

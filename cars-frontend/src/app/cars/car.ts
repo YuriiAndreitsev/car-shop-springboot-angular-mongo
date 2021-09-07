@@ -1,7 +1,7 @@
 import { Brand } from './brand';
 
 export interface Car {
-    id: number;
+    id: string;
     model:string;
     brand:Brand;
     number:string;

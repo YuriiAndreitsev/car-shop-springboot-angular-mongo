@@ -26,6 +26,8 @@ public class CarService {
     }
 
     public List<Car> searchCarsContainingBrandOrModel(String term) {
-        return carRepository.findCarsByBrandContainingOrModelContaining(new Brand(term, null,null),term);
+        return carRepository.findCarsByBrand_BrandNameContainingOrModelContaining(term, term);
+
+//        return carRepository.findCarsByBrand_BrandNameContainingOrModelContaining(new Brand(term, null,null),term);
     }
 }

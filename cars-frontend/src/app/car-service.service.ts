@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { Car } from './cars/car';
-import { CARS } from './cars/mock-cars';
 import { MessageService } from './message.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
@@ -39,7 +38,7 @@ getAllCars(): Observable<Car[]> {
 }
 
 
-getCarNo404<Data>(id: number): Observable<Car> {
+getCarNo404<Data>(id: string): Observable<Car> {
   
   return this.http.get<Car[]>(this.GET_CAR_BY_ID+id)
     .pipe(
@@ -52,8 +51,7 @@ getCarNo404<Data>(id: number): Observable<Car> {
     );
 }
 
-getCar(id: number): Observable<Car> {
-  
+getCar(id: string): Observable<Car> {
   return this.http.get<Car>(this.GET_CAR_BY_ID+id).pipe(
     tap(_ => this.log(`fetched car id=${id}`)),
     catchError(this.handleError<Car>(`getCar id=${id}`))
@@ -81,7 +79,7 @@ addCar(hero: Car): Observable<Car> {
   );
 }
 
-deleteCar(id: number): Observable<Car> {
+deleteCar(id: string): Observable<Car> {
   return this.http.delete<Car>(this.DELETE_CAR_BY_ID+`${id}`, this.httpOptions).pipe(
     tap(_ => this.log(`deleted car id=${id}`)),
     catchError(this.handleError<Car>('deleteCar'))

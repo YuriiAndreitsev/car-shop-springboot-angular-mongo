@@ -10,7 +10,8 @@ import { Location } from '@angular/common';
   styleUrls: ['./car-detail.component.css']
 })
 export class CarDetailComponent implements OnInit {
-@Input()car?:Car;
+// @Input()car?:Car;
+car:Car | undefined;
   constructor(private route: ActivatedRoute,
     private carService: CarServiceService,
     private location: Location) { }
@@ -20,12 +21,19 @@ export class CarDetailComponent implements OnInit {
   }
 
   getCar(): void {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
+    const id = this.route.snapshot.paramMap.get('id')!;
     this.carService.getCar(id)
       .subscribe(car => this.car = car);
   }
 
   goBack(): void {
     this.location.back();
+  }
+
+  save(): void {
+    if (this.car) {
+      this.carService.updateCar(this.car)
+        .subscribe(() => this.goBack());
+    }
   }
 }
