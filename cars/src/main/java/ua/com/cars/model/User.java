@@ -14,7 +14,7 @@ import java.util.Set;
 @Document(collection = "users")
 public class User {
     @Id
-    private Long id;
+    private String id;
     private String name;
     private String username;
     private String password;

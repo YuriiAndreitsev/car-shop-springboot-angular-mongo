@@ -35,11 +35,11 @@ public class UserController {
         return ResponseEntity.created(uri).body(userService.saveUser(user));
     }
 
-    @PostMapping("/role/addToUser")
-    public ResponseEntity<?> addRoleToUser(@RequestBody RoleToUserForm form) {
-        userService.addRoleToUser(form.getUsername(), form.getRoleName());
-        return ResponseEntity.ok().build();
-    }
+//    @PostMapping("/role/addToUser")
+//    public ResponseEntity<?> addRoleToUser(@RequestBody RoleToUserForm form) {
+//        userService.addRoleToUser(form.getUsername(), form.getRoleName());
+//        return ResponseEntity.ok().build();
+//    }
 
     @GetMapping("/token/refresh")
     public void refreshToken(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
@@ -52,10 +52,10 @@ public class UserController {
     }
 }
 
-
-@Data
-class RoleToUserForm {
-    private String username;
-    private String roleName;
-}
+//
+//@Data
+//class RoleToUserForm {
+//    private String username;
+//    private String roleName;
+//}
 
