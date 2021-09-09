@@ -24,7 +24,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 
@@ -85,7 +84,6 @@ public class UserService implements UserDetailsService {
     }
 
     public void refreshToken(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, String authHeader) throws IOException {
-        if (authHeader != null && authHeader.startsWith(BEARER)) {
             try {
                 String refresh_token = authHeader.substring(BEARER.length());
                 Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
@@ -113,8 +111,6 @@ public class UserService implements UserDetailsService {
                 httpServletResponse.setContentType(MediaType.APPLICATION_JSON_VALUE);
                 new ObjectMapper().writeValue(httpServletResponse.getOutputStream(), error);
             }
-        } else {
-            throw new RuntimeException("Refresh Token is missing");
         }
-    }
+
 }

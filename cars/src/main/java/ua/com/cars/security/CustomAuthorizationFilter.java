@@ -43,32 +43,32 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
         } else {
             String authHeader = httpServletRequest.getHeader(AUTHORIZATION);
             if (authHeader != null && authHeader.startsWith(BEARER)) {
-                try {
-                    userService.refreshToken(httpServletRequest, httpServletResponse, authHeader);
-                } catch (IOException e) {
-                    log.error("Unable to refresh token because of IOException");
-                }
 //                try {
-//                    String token = authHeader.substring(BEARER.length());
-//                    Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
-//                    JWTVerifier verifier = JWT.require(algorithm).build();
-//                    DecodedJWT decodedJWT = verifier.verify(token);
-//                    String username = decodedJWT.getSubject();
-//                    String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
-//                    Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-//                    stream(roles).forEach(role -> authorities.add(new SimpleGrantedAuthority(role)));
-//                    UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, null, authorities);
-//                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-//                    filterChain.doFilter(httpServletRequest, httpServletResponse);
-//                } catch (Exception e) {
-//                    log.error("Error loggin in : {}", e.getMessage());
-//                    httpServletResponse.setHeader("error", e.getMessage());
-//                    httpServletResponse.setStatus(FORBIDDEN.value());
-//                    Map<String, String> error = new HashMap<>();
-//                    error.put("error_message", e.getMessage());
-//                    httpServletResponse.setContentType(MediaType.APPLICATION_JSON_VALUE);
-//                    new ObjectMapper().writeValue(httpServletResponse.getOutputStream(), error);
+//                    userService.refreshToken(httpServletRequest, httpServletResponse, authHeader);
+//                } catch (IOException e) {
+//                    log.error("Unable to refresh token because of IOException");
 //                }
+                try {
+                    String token = authHeader.substring(BEARER.length());
+                    Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
+                    JWTVerifier verifier = JWT.require(algorithm).build();
+                    DecodedJWT decodedJWT = verifier.verify(token);
+                    String username = decodedJWT.getSubject();
+                    String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
+                    Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+                    stream(roles).forEach(role -> authorities.add(new SimpleGrantedAuthority(role)));
+                    UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, null, authorities);
+                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                    filterChain.doFilter(httpServletRequest, httpServletResponse);
+                } catch (Exception e) {
+                    log.error("Error loggin in : {}", e.getMessage());
+                    httpServletResponse.setHeader("error", e.getMessage());
+                    httpServletResponse.setStatus(FORBIDDEN.value());
+                    Map<String, String> error = new HashMap<>();
+                    error.put("error_message", e.getMessage());
+                    httpServletResponse.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                    new ObjectMapper().writeValue(httpServletResponse.getOutputStream(), error);
+                }
             } else {
                 filterChain.doFilter(httpServletRequest, httpServletResponse);
             }
