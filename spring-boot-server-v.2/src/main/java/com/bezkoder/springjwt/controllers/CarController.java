@@ -1,6 +1,8 @@
 package com.bezkoder.springjwt.controllers;
 
 import com.bezkoder.springjwt.models.Car;
+import com.bezkoder.springjwt.search.PagedResponse;
+import com.bezkoder.springjwt.search.SearchRequest;
 import com.bezkoder.springjwt.security.services.CarService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +21,12 @@ public class CarController {
 
     @GetMapping("/all")
     public ResponseEntity<List<Car>> getAllCars() {
-//        log.warn("Fetchin");
         return ResponseEntity.ok(carService.getAllCars());
+    }
+
+    @GetMapping("/all-paged")
+    public ResponseEntity<PagedResponse<Car>> getAllCarsPaged(SearchRequest request) {
+        return ResponseEntity.ok(carService.getAllCarsPaged(request));
     }
 
     @GetMapping("/{id}")
