@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { CarServiceService } from '../car-service.service';
-import { MessageService } from '../message.service';
-import { Car } from './car';
+import {Component, OnInit} from '@angular/core';
+import {CarServiceService} from '../car-service.service';
+import {MessageService} from '../message.service';
+import {Car} from './car';
+import {CarPage} from './car-page.model';
+import {PageRequest} from "./page-request";
 
 @Component({
   selector: 'app-cars',
@@ -11,10 +13,13 @@ import { Car } from './car';
 export class CarsComponent implements OnInit {
   cars: Car[] = [];
   selectedCar?: Car;
+  page: number = 1;
+  pageSize: number = 6;
 
-  constructor(private carService: CarServiceService, private messageService: MessageService) { }
+  constructor(private carService: CarServiceService, private messageService: MessageService) {
+  }
 
-  getCars(): void{
+  getCars(): void {
     this.carService.getAllCars().subscribe(cars => this.cars = cars);
   }
 
@@ -25,12 +30,15 @@ export class CarsComponent implements OnInit {
 
   ngOnInit(): void {
     this.getCars();
+
   }
 
   add(model: string): void {
     model = model.trim();
-    if (!model) { return; }
-    this.carService.addCar({ model } as Car)
+    if (!model) {
+      return;
+    }
+    this.carService.addCar({model} as Car)
       .subscribe(car => {
         this.cars.push(car);
       });

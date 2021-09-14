@@ -19,6 +19,7 @@ import {HeroSearchComponent} from './hero-search/hero-search.component';
 import {CarDetailComponent} from './car-detail/car-detail.component';
 import {DashboardComponent} from './dashboard/dashboard.component';
 import {CarsComponent} from './cars/cars.component';
+import {NgbPaginationModule} from "@ng-bootstrap/ng-bootstrap";
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import {CarsComponent} from './cars/cars.component';
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
+    NgbPaginationModule,
   ],
   providers: [authInterceptorProviders],
   bootstrap: [AppComponent]

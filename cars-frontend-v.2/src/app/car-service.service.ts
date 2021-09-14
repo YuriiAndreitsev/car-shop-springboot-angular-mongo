@@ -5,6 +5,8 @@ import { MessageService } from './message.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { catchError, map, tap } from 'rxjs/operators';
+import {CarPage} from './cars/car-page.model';
+import {PageRequest} from "./cars/page-request";
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +16,7 @@ export class CarServiceService {
 
   private apiServerUrl = environment.apiBaseUrl;
   private GET_ALL_CARS = `${this.apiServerUrl}/api/cars/all`;
+  private GET_ALL_CARS_PAGED = `${this.apiServerUrl}/api/cars/all-paged`;
   private GET_CAR_BY_ID = `${this.apiServerUrl}/api/cars/`;
   private SEARCH_CAR_BY_TERM = `${this.apiServerUrl}/api/cars/search/`;
   private ADD_CAR = `${this.apiServerUrl}/api/cars/add`;
@@ -22,14 +25,13 @@ export class CarServiceService {
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };
-//   getAllCars():Observable<Car[]>{
-//     const cars = of(CARS);
-//     this.messageService.add('CarService: fetched cars');
-//     return cars;
-// }
+
+  pageChangedRequest():Observable<PageRequest>{
+    return
+  }
+
 
 getAllCars(): Observable<Car[]> {
-  this.messageService.add('Fetching cars from server');
   return this.http.get<Car[]>(this.GET_ALL_CARS).pipe(
     tap(_ => this.log('fetched cars')),
     catchError(this.handleError<Car[]>('getAllCars', []))
@@ -50,7 +52,7 @@ getCarNo404<Data>(id: string): Observable<Car> {
 }
 
 getCar(id: string): Observable<Car> {
-  return this.http.get<Car>(this.GET_CAR_BY_ID+id).pipe(
+  return this.http.get<Car>(this.GET_CAR_BY_ID + id).pipe(
     tap(_ => this.log(`fetched car id=${id}`)),
     catchError(this.handleError<Car>(`getCar id=${id}`))
   );
@@ -62,7 +64,7 @@ getCar(id: string): Observable<Car> {
     // if not search term, return empty hero array.
     return of([]);
   }
-  return this.http.get<Car[]>(this.SEARCH_CAR_BY_TERM+`${term}`).pipe(
+  return this.http.get<Car[]>(this.SEARCH_CAR_BY_TERM + `${term}`).pipe(
     tap(x => x.length ?
        this.log(`found cars matching "${term}"`) :
        this.log(`no cars matching "${term}"`)),
@@ -78,7 +80,7 @@ addCar(hero: Car): Observable<Car> {
 }
 
 deleteCar(id: string): Observable<Car> {
-  return this.http.delete<Car>(this.DELETE_CAR_BY_ID+id, this.httpOptions).pipe(
+  return this.http.delete<Car>(this.DELETE_CAR_BY_ID + id, this.httpOptions).pipe(
     tap(_ => this.log(`deleted car id=${id}`)),
     catchError(this.handleError<Car>('deleteCar'))
   );
