@@ -7,15 +7,15 @@ import { CarServiceService } from '../car-service.service';
 import { Car } from '../cars/car';
 
 @Component({
-  selector: 'app-hero-search',
-  templateUrl: './hero-search.component.html',
-  styleUrls: ['./hero-search.component.css']
+  selector: 'app-car-search',
+  templateUrl: './car-search.component.html',
+  styleUrls: ['./car-search.component.css']
 })
-export class HeroSearchComponent implements OnInit {
+export class CarSearchComponent implements OnInit {
   cars$!: Observable<Car[]>;
   private searchTerms = new Subject<string>();
   constructor(private carService: CarServiceService) {}
-  
+
   ngOnInit(): void {
     this.cars$ = this.searchTerms.pipe(
       // wait 300ms after each keystroke before considering the term

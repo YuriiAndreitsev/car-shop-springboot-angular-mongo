@@ -1,9 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {CarServiceService} from '../car-service.service';
-import {MessageService} from '../message.service';
 import {Car} from './car';
-import {CarPage} from './car-page.model';
-import {PageRequest} from "./page-request";
+import {FileService} from "../_services/file.service";
+import {environment} from "../../environments/environment";
 
 @Component({
   selector: 'app-cars',
@@ -15,33 +14,32 @@ export class CarsComponent implements OnInit {
   selectedCar?: Car;
   page: number = 1;
   pageSize: number = 6;
+  brands: string[] = [];
 
-  constructor(private carService: CarServiceService, private messageService: MessageService) {
+
+  constructor(private carService: CarServiceService) {
   }
+
 
   getCars(): void {
     this.carService.getAllCars().subscribe(cars => this.cars = cars);
   }
 
+  getCarsByBrand(brand: string): void {
+    this.carService.getAllCarsByBrand(brand).subscribe(carsByBrand => this.cars = carsByBrand);
+  }
+
+  getBrands(): void {
+    this.carService.getBrands().subscribe(brands => this.brands = brands);
+  }
+
   onSelect(car: Car): void {
     this.selectedCar = car;
-    this.messageService.add(`CarsComponent: Selected car id=${car.id}`);
   }
 
   ngOnInit(): void {
     this.getCars();
-
-  }
-
-  add(model: string): void {
-    model = model.trim();
-    if (!model) {
-      return;
-    }
-    this.carService.addCar({model} as Car)
-      .subscribe(car => {
-        this.cars.push(car);
-      });
+    this.getBrands();
   }
 
   delete(car: Car): void {

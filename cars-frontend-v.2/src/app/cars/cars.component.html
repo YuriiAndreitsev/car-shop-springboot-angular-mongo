@@ -1,55 +1,59 @@
+<!--<app-add-car></app-add-car>-->
 <h1>ALBUM</h1>
 <ngb-pagination
   [(page)]="page"
   [pageSize]="pageSize"
   [collectionSize]="cars.length"></ngb-pagination>
 <hr>
+<div>
+  <div>
+    <hr>
+    <span>Select By Brands:</span>
+    <ul *ngFor="let brand of brands">
+      <li>
+        <button class="btn btn-outline-secondary" (click)="getCarsByBrand(brand)"></button>
+        {{brand}}</li>
+    </ul>
+    <hr>
+  </div>
+  <div class="album py-5 bg-light">
+    <div class="container">
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+        <div class="col" *ngFor="let car of cars | slice: (page-1) * pageSize : page * pageSize">
+          <div class="card shadow-sm">
 
-<div class="album py-5 bg-light">
-  <div class="container">
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-      <div class="col" *ngFor="let car of cars | slice: (page-1) * pageSize : page * pageSize">
-        <div class="card shadow-sm">
-          <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg"
-               role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false">
-            <title>{{car.model}}</title>
-            <rect width="100%" height="100%" fill="#55595c"/>
-            <text x="50%" y="50%" fill="#eceeef" dy=".3em">{{car.model}}</text>
-          </svg>
-
-          <div class="card-body">
-            <p class="card-text"><span class="badge">{{car.model}}</span>{{car.brand.brandName}}</p>
-            <div class="d-flex justify-content-between align-items-center">
-              <div class="btn-group">
-                <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+            <div *ngIf="car.urlImageList.length>=0; else elseBlock">
+            <span *ngFor="let img of car.urlImageList">
+             <img src="../../assets/images{{img}}" alt="{{car.model}}" width="80%" height="80%"/>
+            </span>
+            </div>
+            <ng-template #elseBlock>
+              <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg"
+                   role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice"
+                   focusable="false">
+                <title>{{car.model}}</title>
+                <rect width="100%" height="100%" fill="#55595c"/>
+                <text x="50%" y="50%" fill="#eceeef" dy=".3em">{{car.model}}</text>
+              </svg>
+            </ng-template>
+            <div class="card-body">
+              <p class="card-text"><span class="badge">{{car.model}}</span>{{car.brand.brandName}}</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                  <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                </div>
+                <small class="text-muted">9 mins</small>
               </div>
-              <small class="text-muted">9 mins</small>
             </div>
           </div>
+          <hr>
         </div>
-        <hr>
       </div>
     </div>
-  </div><ngb-pagination
-  [(page)]="page"
-  [pageSize]="pageSize"
-  [collectionSize]="cars.length"></ngb-pagination>
+    <ngb-pagination
+      [(page)]="page"
+      [pageSize]="pageSize"
+      [collectionSize]="cars.length"></ngb-pagination>
+  </div>
 </div>
-<!--<div>-->
-<!--  <label for="new-car">Car name: </label>-->
-<!--  <input id="new-car" #carName/>-->
-<!--  &lt;!&ndash; (click) passes input value to add() and then clears the input &ndash;&gt;-->
-<!--  <button class="add-button" (click)="add(carName.value); carName.value=''"> Add Car</button>-->
-<!--</div>-->
-
-<!--<ul class="cars">-->
-<!--  <li *ngFor="let car of cars">-->
-<!--    <a routerLink="/detail/{{car.id}}">-->
-<!--      <span class="badge">{{car.model}}</span>{{car.brand.brandName}}-->
-<!--    </a>-->
-<!--    <button class="delete" title="delete car"-->
-<!--            (click)="delete(car)">x-->
-<!--    </button>-->
-<!--  </li>-->
-<!--</ul>-->

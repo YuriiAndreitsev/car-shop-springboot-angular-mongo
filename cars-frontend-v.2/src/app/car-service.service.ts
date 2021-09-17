@@ -1,97 +1,114 @@
-import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { Car } from './cars/car';
-import { MessageService } from './message.service';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { environment } from 'src/environments/environment';
-import { catchError, map, tap } from 'rxjs/operators';
-import {CarPage} from './cars/car-page.model';
+import {Injectable} from '@angular/core';
+import {Observable, of} from 'rxjs';
+import {Car} from './cars/car';
+import {MessageService} from './message.service';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {environment} from 'src/environments/environment';
+import {catchError, map, tap} from 'rxjs/operators';
 import {PageRequest} from "./cars/page-request";
 
 @Injectable({
   providedIn: 'root'
 })
 export class CarServiceService {
-  constructor(  private http: HttpClient, private messageService: MessageService) { }
+  constructor(private http: HttpClient, private messageService: MessageService) {
+  }
 
   private apiServerUrl = environment.apiBaseUrl;
   private GET_ALL_CARS = `${this.apiServerUrl}/api/cars/all`;
-  private GET_ALL_CARS_PAGED = `${this.apiServerUrl}/api/cars/all-paged`;
+  private GET_ALL_CARS_BY_BRAND = `${this.apiServerUrl}/api/cars/all-by-brand/`;
+  private GET_BRANDS = `${this.apiServerUrl}/api/cars/brands`;
   private GET_CAR_BY_ID = `${this.apiServerUrl}/api/cars/`;
   private SEARCH_CAR_BY_TERM = `${this.apiServerUrl}/api/cars/search/`;
   private ADD_CAR = `${this.apiServerUrl}/api/cars/add`;
   private DELETE_CAR_BY_ID = `${this.apiServerUrl}/api/cars/delete/`;
   private UPDATE_CAR = `${this.apiServerUrl}/api/cars/update/`;
   httpOptions = {
-    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    headers: new HttpHeaders({'Content-Type': 'application/json'})
   };
 
-  pageChangedRequest():Observable<PageRequest>{
-    return
+  getAllCars(): Observable<Car[]> {
+    return this.http.get<Car[]>(this.GET_ALL_CARS).pipe(
+      tap(_ => this.log('fetched cars')),
+      catchError(this.handleError<Car[]>('getAllCars', []))
+    );
+  }
+
+  getBrands() {
+    return this.http.get<string[]>(this.GET_BRANDS).pipe(
+      tap(_ => this.log('fetched brands')),
+      catchError(this.handleError<string[]>('getBrands', []))
+    );
+  }
+
+  getAllCarsByBrand(brand: string): Observable<Car[]> {
+    return this.http.get<Car[]>(this.GET_ALL_CARS_BY_BRAND + brand).pipe(
+      tap(_ => this.log('fetched cars by brand')),
+      catchError(this.handleError<Car[]>('getAllCarsByBrand', []))
+    );
   }
 
 
-getAllCars(): Observable<Car[]> {
-  return this.http.get<Car[]>(this.GET_ALL_CARS).pipe(
-    tap(_ => this.log('fetched cars')),
-    catchError(this.handleError<Car[]>('getAllCars', []))
-  );
-}
+  getCarNo404<Data>(id: string): Observable<Car> {
+    return this.http.get<Car[]>(this.GET_CAR_BY_ID + id)
+      .pipe(
+        map(cars => cars[0]), // returns a {0|1} element array
+        tap(c => {
+          const outcome = c ? `fetched` : `did not find`;
+          this.log(`${outcome} car id=${id}`);
+        }),
+        catchError(this.handleError<Car>(`getCar id=${id}`))
+      );
+  }
 
+  getImg(fileName: string): Observable<File> {
+    return this.http.get<File>(`${this.apiServerUrl}/api/files/downloadFile/${fileName}`).pipe(
+      tap(_ => this.log(`fetched car id=${fileName}`)),
+      catchError(this.handleError<File>(`getImg id=${fileName}`))
+    );
+  }
 
-getCarNo404<Data>(id: string): Observable<Car> {
-  return this.http.get<Car[]>(this.GET_CAR_BY_ID + id)
-    .pipe(
-      map(cars => cars[0]), // returns a {0|1} element array
-      tap(c => {
-        const outcome = c ? `fetched` : `did not find`;
-        this.log(`${outcome} car id=${id}`);
-      }),
+  getCar(id: string): Observable<Car> {
+    return this.http.get<Car>(this.GET_CAR_BY_ID + id).pipe(
+      tap(_ => this.log(`fetched car id=${id}`)),
       catchError(this.handleError<Car>(`getCar id=${id}`))
     );
-}
-
-getCar(id: string): Observable<Car> {
-  return this.http.get<Car>(this.GET_CAR_BY_ID + id).pipe(
-    tap(_ => this.log(`fetched car id=${id}`)),
-    catchError(this.handleError<Car>(`getCar id=${id}`))
-  );
-}
-
- /* GET cars which model contains search term */
- searchCars(term: string): Observable<Car[]> {
-  if (!term.trim()) {
-    // if not search term, return empty hero array.
-    return of([]);
   }
-  return this.http.get<Car[]>(this.SEARCH_CAR_BY_TERM + `${term}`).pipe(
-    tap(x => x.length ?
-       this.log(`found cars matching "${term}"`) :
-       this.log(`no cars matching "${term}"`)),
-    catchError(this.handleError<Car[]>('searchCars', []))
-  );
-}
 
-addCar(hero: Car): Observable<Car> {
-  return this.http.post<Car>(this.ADD_CAR, hero, this.httpOptions).pipe(
-    tap((newCar: Car) => this.log(`added  car w/ id=${newCar.id}`)),
-    catchError(this.handleError<Car>('addCar'))
-  );
-}
+  /* GET cars which model contains search term */
+  searchCars(term: string): Observable<Car[]> {
+    if (!term.trim()) {
+      // if not search term, return empty hero array.
+      return of([]);
+    }
+    return this.http.get<Car[]>(this.SEARCH_CAR_BY_TERM + `${term}`).pipe(
+      tap(x => x.length ?
+        this.log(`found cars matching "${term}"`) :
+        this.log(`no cars matching "${term}"`)),
+      catchError(this.handleError<Car[]>('searchCars', []))
+    );
+  }
 
-deleteCar(id: string): Observable<Car> {
-  return this.http.delete<Car>(this.DELETE_CAR_BY_ID + id, this.httpOptions).pipe(
-    tap(_ => this.log(`deleted car id=${id}`)),
-    catchError(this.handleError<Car>('deleteCar'))
-  );
-}
+  addCar(car: Car): Observable<Car> {
+    return this.http.post<Car>(this.ADD_CAR, car, this.httpOptions).pipe(
+      tap((newCar: Car) => this.log(`added  car w/ id=${newCar.id}`)),
+      catchError(this.handleError<Car>('addCar'))
+    );
+  }
 
-updateCar(car: Car): Observable<any> {
-  return this.http.put(this.UPDATE_CAR, car, this.httpOptions).pipe(
-    tap(_ => this.log(`updated car id=${car.id}`)),
-    catchError(this.handleError<any>('updateCar'))
-  );
-}
+  deleteCar(id: string): Observable<Car> {
+    return this.http.delete<Car>(this.DELETE_CAR_BY_ID + id, this.httpOptions).pipe(
+      tap(_ => this.log(`deleted car id=${id}`)),
+      catchError(this.handleError<Car>('deleteCar'))
+    );
+  }
+
+  updateCar(car: Car): Observable<any> {
+    return this.http.put(this.UPDATE_CAR, car, this.httpOptions).pipe(
+      tap(_ => this.log(`updated car id=${car.id}`)),
+      catchError(this.handleError<any>('updateCar'))
+    );
+  }
 
 
   private handleError<T>(operation = 'operation', result?: T) {
@@ -103,9 +120,11 @@ updateCar(car: Car): Observable<any> {
       // Let the app keep running by returning an empty result.
       return of(result as T);
     };
-}
+  }
 
-private log(message: string) {
-  this.messageService.add(`HeroService: ${message}`);
-}
+  private log(message: string) {
+    this.messageService.add(`HeroService: ${message}`);
+  }
+
+
 }

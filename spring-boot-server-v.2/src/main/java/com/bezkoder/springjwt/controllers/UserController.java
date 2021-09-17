@@ -1,7 +1,7 @@
 package com.bezkoder.springjwt.controllers;
 
 import com.bezkoder.springjwt.models.User;
-import com.bezkoder.springjwt.security.services.UserService;
+import com.bezkoder.springjwt.services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

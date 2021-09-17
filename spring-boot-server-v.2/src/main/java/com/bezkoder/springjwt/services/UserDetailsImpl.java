@@ -1,4 +1,4 @@
-package com.bezkoder.springjwt.security.services;
+package com.bezkoder.springjwt.services;
 
 import com.bezkoder.springjwt.models.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;

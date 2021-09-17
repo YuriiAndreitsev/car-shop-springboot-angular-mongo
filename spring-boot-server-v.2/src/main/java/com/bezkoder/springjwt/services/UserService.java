@@ -1,4 +1,4 @@
-package com.bezkoder.springjwt.security.services;
+package com.bezkoder.springjwt.services;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;

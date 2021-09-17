@@ -2,7 +2,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 
 import {AppRoutingModule} from './app-routing.module';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 
 import {AppComponent} from './app.component';
@@ -15,11 +15,13 @@ import {BoardModeratorComponent} from './board-moderator/board-moderator.compone
 import {BoardUserComponent} from './board-user/board-user.component';
 
 import {authInterceptorProviders} from './_helpers/auth.interceptor';
-import {HeroSearchComponent} from './hero-search/hero-search.component';
+import {CarSearchComponent} from './car-search/car-search.component';
 import {CarDetailComponent} from './car-detail/car-detail.component';
 import {DashboardComponent} from './dashboard/dashboard.component';
 import {CarsComponent} from './cars/cars.component';
 import {NgbPaginationModule} from "@ng-bootstrap/ng-bootstrap";
+import { AddCarComponent } from './add-car/add-car.component';
+import {RouterModule} from "@angular/router";
 
 @NgModule({
   declarations: [
@@ -31,17 +33,21 @@ import {NgbPaginationModule} from "@ng-bootstrap/ng-bootstrap";
     BoardAdminComponent,
     BoardModeratorComponent,
     BoardUserComponent,
-    HeroSearchComponent,
+    CarSearchComponent,
     DashboardComponent,
     CarDetailComponent,
-    CarsComponent
+    CarsComponent,
+    AddCarComponent,
+
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
+    RouterModule,
     FormsModule,
     HttpClientModule,
     NgbPaginationModule,
+    ReactiveFormsModule
   ],
   providers: [authInterceptorProviders],
   bootstrap: [AppComponent]

@@ -1,7 +1,6 @@
 package com.bezkoder.springjwt.controllers;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -30,7 +29,7 @@ import com.bezkoder.springjwt.payload.response.JwtResponse;
 import com.bezkoder.springjwt.payload.response.MessageResponse;
 import com.bezkoder.springjwt.repository.UserRepository;
 import com.bezkoder.springjwt.security.jwt.JwtUtils;
-import com.bezkoder.springjwt.security.services.UserDetailsImpl;
+import com.bezkoder.springjwt.services.UserDetailsImpl;
 
 @CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 @RestController

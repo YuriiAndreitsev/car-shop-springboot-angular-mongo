@@ -1,4 +1,4 @@
-package com.bezkoder.springjwt.security.services;
+package com.bezkoder.springjwt.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
