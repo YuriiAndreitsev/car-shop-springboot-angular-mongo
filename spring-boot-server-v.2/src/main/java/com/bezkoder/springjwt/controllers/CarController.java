@@ -24,10 +24,10 @@ public class CarController {
     @Autowired
     ImageUrlBuilder imageBuilder;
 
-    @PostMapping("/test")
-    public String test(@RequestBody Car car) {
-        return imageBuilder.convertUploadedCarParamsToImageUrl(car);
-    }
+//    @PostMapping("/test")
+//    public String test(@RequestBody Car car) {
+//        return imageBuilder.convertUploadedCarParamsToImageUrl(car);
+//    }
 
     @GetMapping("/all")
     public ResponseEntity<List<Car>> getAllCars() {
@@ -61,7 +61,6 @@ public class CarController {
 
     @PostMapping("/add")
     public ResponseEntity<Car> addCar(@RequestBody Car car) {
-        log.warn("NEW car is : {}", car);
         car.setUrlImageList(new HashSet<String>());
         car.getUrlImageList().add(imageBuilder.convertUploadedCarParamsToImageUrl(car));
         log.warn("new car is : {}", car);

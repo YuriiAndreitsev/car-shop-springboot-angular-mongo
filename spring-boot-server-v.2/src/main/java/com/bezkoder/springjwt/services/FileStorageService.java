@@ -3,6 +3,7 @@ package com.bezkoder.springjwt.services;
 import com.bezkoder.springjwt.config.FileStorageProperties;
 import com.bezkoder.springjwt.exception.FileStorageException;
 import com.bezkoder.springjwt.exception.MyFileNotFoundException;
+import com.bezkoder.springjwt.utils.ImageUrlBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -22,9 +23,9 @@ import java.util.Objects;
 @Service
 @Slf4j
 public class FileStorageService {
-
     private final Path fileStorageLocation;
-
+    @Autowired
+    ImageUrlBuilder imageBuilder;
     @Autowired
     public FileStorageService(FileStorageProperties fileStorageProperties) {
 //        this.fileStorageLocation = Paths.get(fileStorageProperties.getUploadDir())
@@ -35,6 +36,26 @@ public class FileStorageService {
             Files.createDirectories(this.fileStorageLocation);
         } catch (Exception ex) {
             throw new FileStorageException("Could not create the directory where the uploaded files will be stored.", ex);
+        }
+    }
+
+    public String storeFile(MultipartFile file, String model, String brand) {
+        String fileName=  imageBuilder.createFileName(model,brand);
+//        String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
+        log.warn("Path to upload = {}", fileStorageLocation);
+        try {
+            // Check if the file's name contains invalid characters
+            if (fileName.contains("..")) {
+                throw new FileStorageException("Sorry! Filename contains invalid path sequence " + fileName);
+            }
+
+            // Copy file to the target location (Replacing existing file with the same name)
+            Path targetLocation = Paths.get(imageBuilder.resolveFilePath(model,brand)).normalize().resolve(fileName);
+            Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
+
+            return fileName;
+        } catch (IOException ex) {
+            throw new FileStorageException("Could not store file " + fileName + ". Please try again!", ex);
         }
     }
 

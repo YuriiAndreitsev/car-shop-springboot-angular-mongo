@@ -25,11 +25,26 @@ public class ImageUrlBuilder {
         return sb.toString();
     }
 
+    public String resolveFilePath(String model, String brand){
+        log.warn("converting image path : {}, {}", model, brand);
+        sb = new StringBuilder();
+        String slash = "/";
+        String baseUrl = "./src/main/resources/images/";
+
+        sb.append(baseUrl)
+                .append(brand)
+                .append(slash)
+                .append(model)
+                .append(slash);
+//                .append(createFileName(brand,model));
+        return sb.toString();
+    }
+
     private String prepareString (String s){
         return s.toLowerCase().trim().replaceAll("  ", " ").replaceAll(" ", "-").replaceAll(System.lineSeparator(), "");
     }
 
-    private String createFileName(String brand,String model){
+    public String createFileName(String brand,String model){
         String dash = "-";
         return brand + dash + model + dash + 1+".jpg";
     }

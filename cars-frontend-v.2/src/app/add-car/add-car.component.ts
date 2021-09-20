@@ -50,8 +50,8 @@ export class AddCarComponent  {
     this.loading = !this.loading;
     console.log(this.file);
     // @ts-ignore
-    this.addCar();
-    this.fileService.upload(this.file).subscribe(
+
+    this.fileService.upload(this.file, this.car).subscribe(
       (event: any) => {
         if (typeof (event) === 'object') {
           // Short link via api response
@@ -60,45 +60,5 @@ export class AddCarComponent  {
         }
       }
     );
-
   }
-
-
-  // public upload(event) {
-  //   const file = event.target.files[0];
-  //
-  //   if (this.isEmpty(file)) {
-  //     this.alert = {value: `File not selected`, type: 'danger'};
-  //     return;
-  //   }
-  //
-  //   const formData = new FormData();
-  //   formData.append('file', file);
-  //   formData.append('fileName', this.fileName);
-  //   this.fileService.upload(formData).subscribe(
-  //     (res) => {
-  //       this.alert = {
-  //         value: `Successfully uploaded the file ${res.value}`,
-  //         type: 'success',
-  //       };
-  //     },
-  //     (error) => {
-  //       console.error(error);
-  //       this.alert = {value: `Failed to upload file`, type: 'danger'};
-  //     }
-  //   );
-  // }
-  //
-  // public openFile(): void {
-  //   const link = document.createElement('a');
-  //   link.target = '_blank';
-  //   link.href = `${environment.apiBaseUrl}/resources/${this.findFile}`;
-  //   link.setAttribute('visibility', 'hidden');
-  //   link.click();
-  // }
-  //
-  // private isEmpty(v: string): boolean {
-  //   return v === undefined || v == null || v === '';
-  // }
-
 }

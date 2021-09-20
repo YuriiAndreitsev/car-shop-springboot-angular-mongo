@@ -1,7 +1,10 @@
 package com.bezkoder.springjwt.controllers;
 
+import com.bezkoder.springjwt.models.Car;
 import com.bezkoder.springjwt.payload.files.UploadFileResponse;
 import com.bezkoder.springjwt.services.FileStorageService;
+import com.bezkoder.springjwt.utils.ImageUrlBuilder;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,17 +25,17 @@ import java.util.stream.Collectors;
 @CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 @RestController
 @RequestMapping("/api/files")
+@Slf4j
 public class FileController {
-
-    private static final Logger logger = LoggerFactory.getLogger(FileController.class);
-
     @Autowired
     private FileStorageService fileStorageService;
 
     @PostMapping("/uploadFile")
-    public UploadFileResponse uploadFile(@RequestParam("file") MultipartFile file) {
+    public UploadFileResponse uploadFile(@RequestParam("file") MultipartFile file,
+                                         @RequestParam("model") String model,
+                                         @RequestParam("brand") String brand                                        ) {
+        log.warn("CAR IN UPLOAD FILE : {}, {}", model,brand);
         String fileName = fileStorageService.storeFile(file);
-
         String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/downloadFile/")
                 .path(fileName)
@@ -42,13 +45,13 @@ public class FileController {
                 file.getContentType(), file.getSize());
     }
 
-    @PostMapping("/uploadMultipleFiles")
-    public List<UploadFileResponse> uploadMultipleFiles(@RequestParam("files") MultipartFile[] files) {
-        return Arrays.asList(files)
-                .stream()
-                .map(file -> uploadFile(file))
-                .collect(Collectors.toList());
-    }
+//    @PostMapping("/uploadMultipleFiles")  , @RequestBody Car car
+//    public List<UploadFileResponse> uploadMultipleFiles(@RequestParam("files") MultipartFile[] files) {
+//        return Arrays.asList(files)
+//                .stream()
+//                .map(file -> uploadFile(file))
+//                .collect(Collectors.toList());
+//    }
 
     @GetMapping("/downloadFile/{fileName:.+}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request) {
@@ -60,7 +63,7 @@ public class FileController {
         try {
             contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
         } catch (IOException ex) {
-            logger.info("Could not determine file type.");
+            log.info("Could not determine file type.");
         }
 
         // Fallback to the default content type if type could not be determined
