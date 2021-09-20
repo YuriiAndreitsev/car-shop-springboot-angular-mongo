@@ -1,45 +1,63 @@
-
-<form (ngSubmit)="onSubmit()">
+<!--<form (ngSubmit)="onSubmit()">-->
+<div>
   <div class="form-group">
     <label for="model">Model: </label>
-    <input id="model" name="model"  class="form-control" required placeholder="Model" type="text" [(ngModel)]="car.model" [ngModelOptions]="{standalone: true}">
+    <input id="model" name="model" class="form-control" required placeholder="Model" type="text" [(ngModel)]="car.model"
+           [ngModelOptions]="{standalone: true}">
   </div>
   <div>
     <label for="brand">Brand: </label>
-    <input id="brand" name="brand"  class="form-control" required placeholder="Brand" type="text" [(ngModel)]="car.brand.brandName" [ngModelOptions]="{standalone: true}">
+    <input id="brand" name="brand" class="form-control" required placeholder="Brand" type="text"
+           [(ngModel)]="car.brand.brandName" [ngModelOptions]="{standalone: true}">
   </div>
   <div>
     <label for="price">Price: </label>
-    <input id="price" name="price" class="form-control" required placeholder="Price" type="number"  [(ngModel)]="car.price" [ngModelOptions]="{standalone: true}">
+    <input id="price" name="price" class="form-control" required placeholder="Price" type="number"
+           [(ngModel)]="car.price" [ngModelOptions]="{standalone: true}">
   </div>
-
-  <button type="submit" class="btn btn-primary">Submit</button>
-</form>
-<!---->
-
-<div>
-  <div>
-    <hr/>
-    <div *ngIf="alert" class="d-flex justify-content-center">
-      <p *ngIf="alert?.type === 'success'" [ngStyle]="{color: 'green'}">{{ alert?.value }}</p>
-      <p *ngIf="alert?.type === 'danger'" [ngStyle]="{color: 'red'}">{{ alert?.value }}</p>
-    </div>
-    <div class="d-flex justify-content-center">
-      <p>Uploading File Name: {{ fileName }}</p>
-    </div>
-    <div class="d-flex justify-content-center">
-      <input [(ngModel)]="fileName" placeholder="Enter file name" type="text">
-      <input (change)="upload($event)" [disabled]="fileName.length < 1" type="file">
-    </div>
-    <br/>
-    <hr/>
-    <div class="d-flex justify-content-center">
-      <p>Searching File Name (with extension): {{ findFile }}</p>
-    </div>
-    <div class="d-flex justify-content-center">
-      <input [(ngModel)]="findFile" placeholder="Search by name" type="text">
-      <input (click)="openFile()" [disabled]="findFile.length < 1" type="button" value="Search">
-    </div>
+  <br>  <hr>
+  <div class="text-center">
+    <input class="form-control" type="file" (change)="onChange($event)">
+    <button (click)="onUpload()" class="btn btn-success"> ADD CAR</button>
+  </div>
+  <!-- Shareable short link of uoloaded file -->
+  <div class="container text-center jumbotron"
+       *ngIf="shortLink">
+    <h2> Visit Here</h2>
+    <a href="{{shortLink}}">{{shortLink}}</a>
+  </div>
+  <!--Flag variable is used here-->
+  <div class="container" *ngIf="loading">
+    <h3>Loading ...</h3>
   </div>
 </div>
+<!--  <button type="submit" class="btn btn-primary">Submit</button>-->
+<!--</form>-->
+<!---->
+
+<!--<div>-->
+<!--  <div>-->
+<!--    <hr/>-->
+<!--    <div *ngIf="alert" class="d-flex justify-content-center">-->
+<!--      <p *ngIf="alert?.type === 'success'" [ngStyle]="{color: 'green'}">{{ alert?.value }}</p>-->
+<!--      <p *ngIf="alert?.type === 'danger'" [ngStyle]="{color: 'red'}">{{ alert?.value }}</p>-->
+<!--    </div>-->
+<!--    <div class="d-flex justify-content-center">-->
+<!--      <p>Uploading File Name: {{ fileName }}</p>-->
+<!--    </div>-->
+<!--    <div class="d-flex justify-content-center">-->
+<!--      <input [(ngModel)]="fileName" placeholder="Enter file name" type="text">-->
+<!--      <input (change)="upload($event)" [disabled]="fileName.length < 1" type="file">-->
+<!--    </div>-->
+<!--    <br/>-->
+<!--    <hr/>-->
+<!--    <div class="d-flex justify-content-center">-->
+<!--      <p>Searching File Name (with extension): {{ findFile }}</p>-->
+<!--    </div>-->
+<!--    <div class="d-flex justify-content-center">-->
+<!--      <input [(ngModel)]="findFile" placeholder="Search by name" type="text">-->
+<!--      <input (click)="openFile()" [disabled]="findFile.length < 1" type="button" value="Search">-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
 
