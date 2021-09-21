@@ -1,14 +1,9 @@
 package com.bezkoder.springjwt.controllers;
 
-import com.bezkoder.springjwt.models.Car;
 import com.bezkoder.springjwt.payload.files.UploadFileResponse;
 import com.bezkoder.springjwt.services.FileStorageService;
-import com.bezkoder.springjwt.utils.ImageUrlBuilder;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,11 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.io.ByteArrayOutputStream;
 
 @CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 @RestController
@@ -54,28 +45,29 @@ public class FileController {
 //                .collect(Collectors.toList());
 //    }
 
-    @GetMapping("/downloadFile/{fileName:.+}")
-    public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request) {
-        // Load file as Resource
-        Resource resource = fileStorageService.loadFileAsResource(fileName);
-
-        // Try to determine file's content type
-        String contentType = null;
-        try {
-            contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
-        } catch (IOException ex) {
-            log.info("Could not determine file type.");
-        }
-
-        // Fallback to the default content type if type could not be determined
-        if (contentType == null) {
-            contentType = "application/octet-stream";
-        }
+    @GetMapping(value = "/download/{filename}")
+    public ResponseEntity<byte[]> downloadFile(@PathVariable String filename) {
+        ByteArrayOutputStream downloadInputStream = fileStorageService.downloadFile(filename);
 
         return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(contentType))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
-                .body(resource);
+                .contentType(contentType(filename))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
+                .body(downloadInputStream.toByteArray());
     }
 
+
+    private MediaType contentType(String filename) {
+        String[] fileArrSplit = filename.split("\\.");
+        String fileExtension = fileArrSplit[fileArrSplit.length - 1];
+        switch (fileExtension) {
+            case "txt":
+                return MediaType.TEXT_PLAIN;
+            case "png":
+                return MediaType.IMAGE_PNG;
+            case "jpg":
+                return MediaType.IMAGE_JPEG;
+            default:
+                return MediaType.APPLICATION_OCTET_STREAM;
+        }
+    }
 }

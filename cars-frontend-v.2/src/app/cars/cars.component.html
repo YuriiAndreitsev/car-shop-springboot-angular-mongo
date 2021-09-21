@@ -21,10 +21,10 @@
       <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
         <div class="col" *ngFor="let car of cars | slice: (page-1) * pageSize : page * pageSize">
           <div class="card shadow-sm">
-
             <div *ngIf="car.urlImageList.length>=0; else elseBlock">
             <span *ngFor="let img of car.urlImageList">
-             <img src="../../assets/images{{img}}" alt="{{car.model}}" width="80%" height="80%"/>
+              <span>{{imageFile}}</span>
+             <img [src]="url" alt="{{car.model}}" width="80%" height="80%"/>
             </span>
             </div>
             <ng-template #elseBlock>

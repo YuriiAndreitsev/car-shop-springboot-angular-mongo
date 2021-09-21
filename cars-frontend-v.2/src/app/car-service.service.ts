@@ -2,10 +2,10 @@ import {Injectable} from '@angular/core';
 import {Observable, of} from 'rxjs';
 import {Car} from './cars/car';
 import {MessageService} from './message.service';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
 import {environment} from 'src/environments/environment';
 import {catchError, map, tap} from 'rxjs/operators';
-import {PageRequest} from "./cars/page-request";
+import {Http, ResponseContentType} from '@angular/http';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +15,7 @@ export class CarServiceService {
   }
 
   private apiServerUrl = environment.apiBaseUrl;
+  private GET_IMAGE = `${this.apiServerUrl}/api/files/download/`;
   private GET_ALL_CARS = `${this.apiServerUrl}/api/cars/all`;
   private GET_ALL_CARS_BY_BRAND = `${this.apiServerUrl}/api/cars/all-by-brand/`;
   private GET_BRANDS = `${this.apiServerUrl}/api/cars/brands`;
@@ -126,5 +127,11 @@ export class CarServiceService {
     this.messageService.add(`HeroService: ${message}`);
   }
 
+  downloadFile(): Observable<Blob> {
+    return this.http.get(this.GET_IMAGE+"model-s-tesla-1.jpg", { responseType:'blob' });
+  }
 
+  // getCarImage() {
+  //   return this.http.get(this.GET_IMAGE+"model s-tesla-1.jpg").pipe(data => console.log(data));
+  // }
 }

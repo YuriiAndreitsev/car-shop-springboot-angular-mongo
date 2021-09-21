@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {CarServiceService} from '../car-service.service';
 import {Car} from './car';
-import {FileService} from "../_services/file.service";
-import {environment} from "../../environments/environment";
+import {saveAs} from 'file-saver'
+import {from} from "rxjs";
 
 @Component({
   selector: 'app-cars',
@@ -15,9 +15,22 @@ export class CarsComponent implements OnInit {
   page: number = 1;
   pageSize: number = 6;
   brands: string[] = [];
-
+  imageFile: Blob;
+  reader = new FileReader();
+  private url: string | ArrayBuffer;
+  image = new Image();
 
   constructor(private carService: CarServiceService) {
+  }
+
+
+  download(): void {
+    this.carService.downloadFile().subscribe(data => this.imageFile = data);
+    this.reader.readAsDataURL(this.imageFile); //FileStream response from .NET core backend
+    this.reader.onload = _event => {
+      this.url = this.reader.result; //url declared earlier
+    };
+    console.log(this.imageFile);
   }
 
 
@@ -40,6 +53,7 @@ export class CarsComponent implements OnInit {
   ngOnInit(): void {
     this.getCars();
     this.getBrands();
+    this.download();
   }
 
   delete(car: Car): void {
