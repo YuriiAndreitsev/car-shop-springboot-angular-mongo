@@ -35,7 +35,7 @@ public class FileController {
                                          @RequestParam("model") String model,
                                          @RequestParam("brand") String brand                                        ) {
         log.warn("CAR IN UPLOAD FILE : {}, {}", model,brand);
-        String fileName = fileStorageService.storeFile(file);
+        String fileName = fileStorageService.storeFile(file, model, brand);
         String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/downloadFile/")
                 .path(fileName)
@@ -45,8 +45,9 @@ public class FileController {
                 file.getContentType(), file.getSize());
     }
 
-//    @PostMapping("/uploadMultipleFiles")  , @RequestBody Car car
+//    @PostMapping("/uploadMultipleFiles")
 //    public List<UploadFileResponse> uploadMultipleFiles(@RequestParam("files") MultipartFile[] files) {
+//
 //        return Arrays.asList(files)
 //                .stream()
 //                .map(file -> uploadFile(file))

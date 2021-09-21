@@ -30,6 +30,8 @@ public class ImageUrlBuilder {
         sb = new StringBuilder();
         String slash = "/";
         String baseUrl = "./src/main/resources/images/";
+        model = prepareString(model);
+        brand = prepareString(brand);
 
         sb.append(baseUrl)
                 .append(brand)
@@ -37,7 +39,7 @@ public class ImageUrlBuilder {
                 .append(model)
                 .append(slash);
 //                .append(createFileName(brand,model));
-        return sb.toString();
+        return sb.toString().toLowerCase();
     }
 
     private String prepareString (String s){
@@ -46,6 +48,6 @@ public class ImageUrlBuilder {
 
     public String createFileName(String brand,String model){
         String dash = "-";
-        return brand + dash + model + dash + 1+".jpg";
+        return (brand + dash + model + dash + 1+".jpg").toLowerCase();
     }
 }

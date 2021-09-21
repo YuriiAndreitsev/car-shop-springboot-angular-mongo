@@ -10,30 +10,9 @@ import {FileService} from "../_services/file.service";
   styleUrls: ['./add-car.component.css']
 })
 export class AddCarComponent  {
-  // public fileName = '';
-  // public findFile = '';
-  // public alert: {
-  //   value: string;
-  //   type: 'success' | 'danger';
-  // };
   car: Car = new Car("", "", 0);
 
   constructor(private carService: CarServiceService, private fileService: FileService) {
-  }
-
-
-  add(car: Car): void {
-    console.log("car to add")
-    console.log(car);
-    this.carService.addCar(car)
-      .subscribe(car => {      });
-  }
-
-  addCar(): void {
-    console.log("car to add")
-    console.log(this.car);
-    this.carService.addCar(this.car)
-      .subscribe(car => {      });
   }
 
   shortLink: string = "";
@@ -60,5 +39,6 @@ export class AddCarComponent  {
         }
       }
     );
+    this.carService.addCar(this.car).subscribe(car => this.car = car);
   }
 }
