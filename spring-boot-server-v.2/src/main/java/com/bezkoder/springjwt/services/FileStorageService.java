@@ -116,7 +116,7 @@ public class FileStorageService {
 
     public ByteArrayOutputStream downloadFile(String keyName) {
         try {
-            InputStream is = new FileInputStream(new File("./src/main/resources/images/tesla/model-s/model s-tesla-1.jpg"));
+            InputStream is = new FileInputStream(new File("./src/main/resources/images/tesla/model-s/model-s-tesla-1.jpg"));
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             int len;
             byte[] buffer = new byte[4096];

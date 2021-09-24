@@ -1,59 +1,121 @@
 <!--<app-add-car></app-add-car>-->
-<h1>ALBUM</h1>
-<ngb-pagination
-  [(page)]="page"
-  [pageSize]="pageSize"
-  [collectionSize]="cars.length"></ngb-pagination>
-<hr>
-<div>
-  <div>
-    <hr>
-    <span>Select By Brands:</span>
-    <ul *ngFor="let brand of brands">
-      <li>
-        <button class="btn btn-outline-secondary" (click)="getCarsByBrand(brand)"></button>
-        {{brand}}</li>
+<div class="row">
+
+  <div class="col-4">
+    <div class="row">
+      <section class="example-section">
+  <span class="example-list-section">
+    <mat-checkbox class="example-margin"
+                  [checked]="allBrandsComplete"
+                  [color]="taskBrand.color"
+                  [indeterminate]="someBrandComplete()"
+                  (change)="setBrandAll($event.checked)">
+      {{taskBrand.name}}
+    </mat-checkbox>
+  </span>
+        <span class="example-list-section">
+    <ul>
+      <li *ngFor="let subtask of taskBrand.subtasks">
+        <mat-checkbox [(ngModel)]="subtask.completed"
+                      [color]="subtask.color"
+                      (ngModelChange)="updateAllBrandComplete()">
+          {{subtask.name}}
+        </mat-checkbox>
+      </li>
     </ul>
-    <hr>
-  </div>
-  <div class="album py-5 bg-light">
-    <div class="container">
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-        <div class="col" *ngFor="let car of cars | slice: (page-1) * pageSize : page * pageSize">
-          <div class="card shadow-sm">
-            <div *ngIf="car.urlImageList.length>=0; else elseBlock">
-            <span *ngFor="let img of car.urlImageList">
-              <span>{{imageFile}}</span>
-             <img [src]="url" alt="{{car.model}}" width="80%" height="80%"/>
-            </span>
-            </div>
-            <ng-template #elseBlock>
-              <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg"
-                   role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice"
-                   focusable="false">
-                <title>{{car.model}}</title>
-                <rect width="100%" height="100%" fill="#55595c"/>
-                <text x="50%" y="50%" fill="#eceeef" dy=".3em">{{car.model}}</text>
-              </svg>
-            </ng-template>
-            <div class="card-body">
-              <p class="card-text"><span class="badge">{{car.model}}</span>{{car.brand.brandName}}</p>
-              <div class="d-flex justify-content-between align-items-center">
-                <div class="btn-group">
-                  <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                  <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-                </div>
-                <small class="text-muted">9 mins</small>
-              </div>
-            </div>
-          </div>
-          <hr>
-        </div>
-      </div>
+  </span>
+      </section>
     </div>
+
+    <!--  <div class="col-4">-->
+    <div class="row">
+      <section class="example-section">
+  <span class="example-list-section">
+    <mat-checkbox class="example-margin"
+                  [checked]="allComplete"
+                  [color]="task.color"
+                  [indeterminate]="someComplete()"
+                  (change)="setAll($event.checked)">
+      {{task.name}}
+    </mat-checkbox>
+  </span>
+        <span class="example-list-section">
+    <ul>
+      <li *ngFor="let subtask of task.subtasks">
+        <mat-checkbox [(ngModel)]="subtask.completed"
+                      [color]="subtask.color"
+                      (ngModelChange)="updateAllComplete()">
+          {{subtask.name}}
+        </mat-checkbox>
+      </li>
+    </ul>
+  </span>
+      </section>
+    </div>
+  </div>
+
+  <div class="col-8">
+    check test 2
+    <h1>ALBUM</h1>
     <ngb-pagination
       [(page)]="page"
       [pageSize]="pageSize"
       [collectionSize]="cars.length"></ngb-pagination>
+    <hr>
+    <div>
+      <div>
+        <hr>
+        <span>Select By Brands:</span>
+        <ul *ngFor="let brand of brands">
+          <li>
+            <button class="btn btn-outline-secondary" (click)="getCarsByBrand(brand)"></button>
+            {{brand}}</li>
+        </ul>
+        <hr>
+      </div>
+      <div class="album py-5 bg-light">
+        <div class="container">
+          <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+            <div class="col" *ngFor="let car of cars | slice: (page-1) * pageSize : page * pageSize">
+              <div class="card shadow-sm">
+                <div>
+<!--                  <div *ngFor="let img of car.urlImageList">-->
+<!--                    <img src="/assets/{{img}}" alt="{{car.model}}" width="80%" height="80%"/>-->
+<!--                  </div>-->
+                </div>
+                <!--            <ng-template #elseBlock>-->
+                <!--              <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg"-->
+                <!--                   role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice"-->
+                <!--                   focusable="false">-->
+                <!--                <title>{{car.model}}</title>-->
+                <!--                <rect width="100%" height="100%" fill="#55595c"/>-->
+                <!--                <text x="50%" y="50%" fill="#eceeef" dy=".3em">{{car.model}}</text>-->
+                <!--              </svg>-->
+                <!--            </ng-template>-->
+                <div class="card-body">
+                  <!--                  <p class="card-text">                    <span class="badge">{{car.model}}</span></p>-->
+                  <span class="row">{{car.model}}</span>
+                  <span class="row">{{car.brand.brandName}}</span>
+                  <span class="row">{{car.price}}</span>
+                  <!--                  <div class="d-flex justify-content-between align-items-center">-->
+
+                  <!--                    <div class="btn-group">-->
+                  <!--                      <button type="button" class="btn btn-sm btn-outline-secondary">View</button>-->
+                  <!--                      <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>-->
+                  <!--                    </div>-->
+                  <!--                    <small class="text-muted">9 mins</small>-->
+                  <!--                  </div>-->
+                </div>
+              </div>
+              <hr>
+            </div>
+          </div>
+        </div>
+        <ngb-pagination
+          [(page)]="page"
+          [pageSize]="pageSize"
+          [collectionSize]="cars.length"></ngb-pagination>
+      </div>
+    </div>
   </div>
 </div>

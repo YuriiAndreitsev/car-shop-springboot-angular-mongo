@@ -2,10 +2,12 @@ import {Injectable} from '@angular/core';
 import {Observable, of} from 'rxjs';
 import {Car} from './cars/car';
 import {MessageService} from './message.service';
-import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {environment} from 'src/environments/environment';
-import {catchError, map, tap} from 'rxjs/operators';
-import {Http, ResponseContentType} from '@angular/http';
+import {catchError, map, take, tap} from 'rxjs/operators';
+import {Task} from './payload/task';
+
+const headers = new HttpHeaders().set('Content-Type', 'application/json; charset=utf-8');
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +17,7 @@ export class CarServiceService {
   }
 
   private apiServerUrl = environment.apiBaseUrl;
-  private GET_IMAGE = `${this.apiServerUrl}/api/files/download/`;
+  private SEND_CAR_PARAMS = `${this.apiServerUrl}/api/cars/unique`;
   private GET_ALL_CARS = `${this.apiServerUrl}/api/cars/all`;
   private GET_ALL_CARS_BY_BRAND = `${this.apiServerUrl}/api/cars/all-by-brand/`;
   private GET_BRANDS = `${this.apiServerUrl}/api/cars/brands`;
@@ -35,37 +37,15 @@ export class CarServiceService {
     );
   }
 
-  getBrands() {
+  getBrands(): Observable<string[]> {
     return this.http.get<string[]>(this.GET_BRANDS).pipe(
-      tap(_ => this.log('fetched brands')),
-      catchError(this.handleError<string[]>('getBrands', []))
-    );
+      tap(s => console.log(s)));
   }
 
   getAllCarsByBrand(brand: string): Observable<Car[]> {
     return this.http.get<Car[]>(this.GET_ALL_CARS_BY_BRAND + brand).pipe(
       tap(_ => this.log('fetched cars by brand')),
       catchError(this.handleError<Car[]>('getAllCarsByBrand', []))
-    );
-  }
-
-
-  getCarNo404<Data>(id: string): Observable<Car> {
-    return this.http.get<Car[]>(this.GET_CAR_BY_ID + id)
-      .pipe(
-        map(cars => cars[0]), // returns a {0|1} element array
-        tap(c => {
-          const outcome = c ? `fetched` : `did not find`;
-          this.log(`${outcome} car id=${id}`);
-        }),
-        catchError(this.handleError<Car>(`getCar id=${id}`))
-      );
-  }
-
-  getImg(fileName: string): Observable<File> {
-    return this.http.get<File>(`${this.apiServerUrl}/api/files/downloadFile/${fileName}`).pipe(
-      tap(_ => this.log(`fetched car id=${fileName}`)),
-      catchError(this.handleError<File>(`getImg id=${fileName}`))
     );
   }
 
@@ -127,11 +107,9 @@ export class CarServiceService {
     this.messageService.add(`HeroService: ${message}`);
   }
 
-  downloadFile(): Observable<Blob> {
-    return this.http.get(this.GET_IMAGE+"model-s-tesla-1.jpg", { responseType:'blob' });
-  }
 
-  // getCarImage() {
-  //   return this.http.get(this.GET_IMAGE+"model s-tesla-1.jpg").pipe(data => console.log(data));
-  // }
+  sendTask(task: Task): Observable<Car[]> {
+    console.log(task);
+    return this.http.post<Car[]>(this.SEND_CAR_PARAMS, task, {headers: headers}); //.pipe(take(1))
+  }
 }

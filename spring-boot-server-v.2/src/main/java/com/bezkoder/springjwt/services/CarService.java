@@ -64,10 +64,7 @@ public class CarService {
     }
 
     public Set<String> getBrands() {
-        Set<String> brands = carRepository.findAll().stream().map(Car::getBrand).map(Brand::getBrandName).collect(Collectors.toSet());
-        log.warn("Brands : {}",brands);
-
-        return brands;
+        return carRepository.findAll().stream().map(Car::getBrand).map(Brand::getBrandName).collect(Collectors.toSet());
 //        return brandRepository.getDistinctByBrandName().stream().map(Brand::getBrandName).collect(Collectors.toList());
     }
 

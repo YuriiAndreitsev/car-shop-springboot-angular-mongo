@@ -20,8 +20,10 @@ import {CarDetailComponent} from './car-detail/car-detail.component';
 import {DashboardComponent} from './dashboard/dashboard.component';
 import {CarsComponent} from './cars/cars.component';
 import {NgbPaginationModule} from "@ng-bootstrap/ng-bootstrap";
-import { AddCarComponent } from './add-car/add-car.component';
+import {AddCarComponent} from './add-car/add-car.component';
 import {RouterModule} from "@angular/router";
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {MatCheckboxModule} from "@angular/material/checkbox";
 
 @NgModule({
   declarations: [
@@ -38,16 +40,17 @@ import {RouterModule} from "@angular/router";
     CarDetailComponent,
     CarsComponent,
     AddCarComponent,
-
   ],
   imports: [
+    MatCheckboxModule,
     BrowserModule,
     AppRoutingModule,
     RouterModule,
     FormsModule,
     HttpClientModule,
     NgbPaginationModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    BrowserAnimationsModule
   ],
   providers: [authInterceptorProviders],
   bootstrap: [AppComponent]

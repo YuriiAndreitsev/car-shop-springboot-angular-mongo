@@ -1,8 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {CarServiceService} from '../car-service.service';
 import {Car} from './car';
-import {saveAs} from 'file-saver'
-import {from} from "rxjs";
+import {Task} from '../payload/task';
+import {TaskBrand} from "../payload/taskBrand";
+
 
 @Component({
   selector: 'app-cars',
@@ -10,29 +11,76 @@ import {from} from "rxjs";
   styleUrls: ['./cars.component.css']
 })
 export class CarsComponent implements OnInit {
+  constructor(private carService: CarServiceService) {
+
+  }
+
   cars: Car[] = [];
   selectedCar?: Car;
   page: number = 1;
   pageSize: number = 6;
   brands: string[] = [];
-  imageFile: Blob;
-  reader = new FileReader();
-  private url: string | ArrayBuffer;
-  image = new Image();
+  allComplete: boolean = false;
+  task: Task = {
+    name: 'Parameters',
+    completed: false,
+    color: 'primary',
+    subtasks: [
+      {name: 'Model', completed: false, color: 'primary'},
+      {name: 'Brand', completed: false, color: 'accent'},
+      {name: 'Price', completed: false, color: 'warn'}
+    ]
+  };
 
-  constructor(private carService: CarServiceService) {
+  taskBrand: TaskBrand = new TaskBrand("Brand", false, "primary", this.brands);
+  allBrandsComplete: boolean = false;
+
+  someBrandComplete(): boolean {
+    if (this.taskBrand.subtasks == null) {
+      return false;
+    }
+    // this.sendCarUniquelizeParams();
+    return this.task.subtasks.filter(t => t.completed).length > 0 && !this.allComplete;
   }
 
-
-  download(): void {
-    this.carService.downloadFile().subscribe(data => this.imageFile = data);
-    this.reader.readAsDataURL(this.imageFile); //FileStream response from .NET core backend
-    this.reader.onload = _event => {
-      this.url = this.reader.result; //url declared earlier
-    };
-    console.log(this.imageFile);
+  setBrandAll(completed: boolean) {
+    this.allBrandsComplete = completed;
+    if (this.taskBrand.subtasks == null) {
+      return;
+    }
+    this.taskBrand.subtasks.forEach(t => t.completed = completed);
   }
 
+  updateAllBrandComplete() {
+    this.allBrandsComplete = this.taskBrand.subtasks != null && this.taskBrand.subtasks.every(t => t.completed);
+    this.sendCarUniquelizeParams();
+  }
+
+  sendCarUniquelizeParams(): void {
+    this.carService.sendTask(this.task).subscribe(cars => this.cars = cars);
+    ;
+  }
+
+  updateAllComplete() {
+    this.allComplete = this.task.subtasks != null && this.task.subtasks.every(t => t.completed);
+    this.sendCarUniquelizeParams();
+  }
+
+  someComplete(): boolean {
+    if (this.task.subtasks == null) {
+      return false;
+    }
+    // this.sendCarUniquelizeParams();
+    return this.task.subtasks.filter(t => t.completed).length > 0 && !this.allComplete;
+  }
+
+  setAll(completed: boolean) {
+    this.allComplete = completed;
+    if (this.task.subtasks == null) {
+      return;
+    }
+    this.task.subtasks.forEach(t => t.completed = completed);
+  }
 
   getCars(): void {
     this.carService.getAllCars().subscribe(cars => this.cars = cars);
@@ -51,9 +99,8 @@ export class CarsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getCars();
     this.getBrands();
-    this.download();
+    this.getCars();
   }
 
   delete(car: Car): void {

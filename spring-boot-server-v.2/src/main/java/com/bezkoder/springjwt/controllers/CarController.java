@@ -1,7 +1,10 @@
 package com.bezkoder.springjwt.controllers;
 
+import com.bezkoder.springjwt.models.Brand;
 import com.bezkoder.springjwt.models.Car;
+import com.bezkoder.springjwt.payload.checkbox.CarParamsTask;
 import com.bezkoder.springjwt.repository.SearchCriteria;
+import com.bezkoder.springjwt.services.CarComparingService;
 import com.bezkoder.springjwt.services.CarService;
 import com.bezkoder.springjwt.utils.ImageUrlBuilder;
 import lombok.extern.slf4j.Slf4j;
@@ -9,12 +12,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 //@CrossOrigin(origins = {"*"})
-@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
-//@CrossOrigin(origins = "*", maxAge = 3600)
+//@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/cars")
 @Slf4j
@@ -23,11 +29,15 @@ public class CarController {
     CarService carService;
     @Autowired
     ImageUrlBuilder imageBuilder;
+    @Autowired
+    CarComparingService comparingService;
 
-//    @PostMapping("/test")
-//    public String test(@RequestBody Car car) {
-//        return imageBuilder.convertUploadedCarParamsToImageUrl(car);
-//    }
+    @PostMapping("/unique")
+    public ResponseEntity<List<Car>> test(@RequestBody CarParamsTask task) {
+        List<Car> carList = carService.getAllCars();
+        comparingService.resolveCarComparation(carList, new String[]{"Tesla", "citroen", "BWM", "Honda", "Toyota"}, comparingService.getParamsToUniquelize(task.getSubtasks()), "brand");
+        return ResponseEntity.ok(carList);
+    }
 
     @GetMapping("/all")
     public ResponseEntity<List<Car>> getAllCars() {
@@ -61,9 +71,8 @@ public class CarController {
 
     @PostMapping("/add")
     public ResponseEntity<Car> addCar(@RequestBody Car car) {
-        car.setUrlImageList(new HashSet<String>());
+        car.setUrlImageList(new HashSet<>());
         car.getUrlImageList().add(imageBuilder.convertUploadedCarParamsToImageUrl(car));
-        log.warn("new car is : {}", car);
         return ResponseEntity.ok(carService.addCar(car));
     }
 
